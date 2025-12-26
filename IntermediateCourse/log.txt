@@ -1,0 +1,66 @@
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                CPUCores,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('ASUS ROG STRIX B550-F', 8, 1, 0, '2025-11-24 16:49:03', 1299.99, 'NVIDIA GeForce RTX 3070')
+
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                CPUCores,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('ASUS ROG STRIX B550-F', 8, 1, 0, '2025-11-24 16:50:36', 1299.99, 'NVIDIA GeForce RTX 3070')
+
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                CPUCores,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('ASUS ROG STRIX B550-F', 8, 1, 0, '2025-11-24 16:54:56', 1299.99, 'NVIDIA GeForce RTX 3070')
+
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                CPUCores,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('ASUS ROG STRIX B550-F', 8, 1, 0, '2025-11-24 16:55:06', 1299.99, 'NVIDIA GeForce RTX 3070')
+
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                CPUCores,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('ASUS ROG STRIX B550-F', 8, 1, 0, '2025-11-24 16:56:24', 1299.99, 'NVIDIA GeForce RTX 3070')
+
+
+INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                CPUCores,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES ('ASUS ROG STRIX B550-F', 8, 1, 0, '2025-11-24 16:57:09', 1299.99, 'NVIDIA GeForce RTX 3070')
+
