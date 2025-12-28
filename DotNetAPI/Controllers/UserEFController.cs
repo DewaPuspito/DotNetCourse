@@ -2,6 +2,7 @@ using AutoMapper;
 using DotNetAPI.Data;
 using DotNetAPI.DTOs;
 using DotNetAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetAPI.Controllers;

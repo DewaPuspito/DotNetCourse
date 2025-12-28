@@ -85,3 +85,5 @@ C:\dotnet-course\DotNetAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
 C:\dotnet-course\DotNetAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\dotnet-course\DotNetAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\dotnet-course\DotNetAPI\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\dotnet-course\DotNetAPI\obj\Debug\net9.0\DotNetAPI.sourcelink.json
+C:\dotnet-course\DotNetAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
