@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DotNetAPI.Data;
 using DotNetAPI.DTOs;
+using DotNetAPI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,11 @@ namespace DotNetAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly DapperData _dapper;
-        private readonly IConfiguration _config;
+        private readonly AuthHelper _authHelper;
         public AuthController(IConfiguration config)
         {
             _dapper = new DapperData(config);
-            _config = config;
+            _authHelper = new AuthHelper(config);
         }
 
         [AllowAnonymous]
@@ -44,7 +45,7 @@ namespace DotNetAPI.Controllers
                         rng.GetNonZeroBytes(passwordSalt);
                     }
 
-                    byte[] passwordHash = GetPasswordHash(userRegister.Password, passwordSalt);
+                    byte[] passwordHash = _authHelper.GetPasswordHash(userRegister.Password, passwordSalt);
 
                     string sqlAddAuth = @"
                         INSERT INTO TutorialAppSchema.Auth ([Email], 
@@ -105,7 +106,7 @@ namespace DotNetAPI.Controllers
             LoginConfirmationDTO loginConfirmation = _dapper
                 .LoadDataSingle<LoginConfirmationDTO>(sqlForHashAndSalt);
 
-            byte[] passwordHash = GetPasswordHash(userLogin.Password, loginConfirmation.PasswordSalt);
+            byte[] passwordHash = _authHelper.GetPasswordHash(userLogin.Password, loginConfirmation.PasswordSalt);
 
             for (int i = 0; i < passwordHash.Length; i++)
             {
@@ -123,7 +124,7 @@ namespace DotNetAPI.Controllers
 
             return Ok(new Dictionary<string, string>
             {
-                {"token", CreateToken(userId)}
+                {"token", _authHelper.CreateToken(userId)}
             });
         }
 
@@ -140,52 +141,8 @@ namespace DotNetAPI.Controllers
 
             return Ok(new Dictionary<string, string>
             {
-                {"token", CreateToken(userIdFromDB )}
+                {"token", _authHelper.CreateToken(userIdFromDB )}
             });
-        }
-
-        private byte[] GetPasswordHash(string password, byte[] passwordSalt)
-        {
-            string passwordSaltPlusString = _config.GetSection("AppSettings:PasswordKey").Value + 
-                Convert.ToBase64String(passwordSalt);
-
-            return KeyDerivation.Pbkdf2(
-                password: password,
-                salt: Encoding.ASCII.GetBytes(passwordSaltPlusString),
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8
-            );
-        }
-
-        private string CreateToken(int userId)
-        {
-            Claim[] claims = new Claim[] {
-                new Claim("userId", userId.ToString())
-            };
-
-            string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
-
-            SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(
-                        tokenKeyString != null ? tokenKeyString : ""
-                    )
-                );
-
-            SigningCredentials credentials = new SigningCredentials(tokenKey, SecurityAlgorithms.HmacSha512Signature);
-
-            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    SigningCredentials = credentials,
-                    Expires = DateTime.Now.AddDays(1)
-                };
-
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-
-            SecurityToken token = tokenHandler.CreateToken(descriptor);
-
-            return tokenHandler.WriteToken(token);
         }
 
     }

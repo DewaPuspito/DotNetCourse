@@ -2468,24 +2468,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dewac\\.nuget\\packages\\": {}
+    "C:\\Users\\ARS-PST-HASAN\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dotnet-course\\DotNetAPI\\DotNetAPI.csproj",
+      "projectUniqueName": "D:\\DEWA\\DotNetCourse\\DotNetAPI\\DotNetAPI.csproj",
       "projectName": "DotNetAPI",
-      "projectPath": "C:\\dotnet-course\\DotNetAPI\\DotNetAPI.csproj",
-      "packagesPath": "C:\\Users\\dewac\\.nuget\\packages\\",
-      "outputPath": "C:\\dotnet-course\\DotNetAPI\\obj\\",
+      "projectPath": "D:\\DEWA\\DotNetCourse\\DotNetAPI\\DotNetAPI.csproj",
+      "packagesPath": "C:\\Users\\ARS-PST-HASAN\\.nuget\\packages\\",
+      "outputPath": "D:\\DEWA\\DotNetCourse\\DotNetAPI\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\dewac\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\ARS-PST-HASAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2562,7 +2569,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
