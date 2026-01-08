@@ -1,8 +1,3 @@
-using DotNetAPI.Data;
-using DotNetAPI.DTOs;
-using DotNetAPI.Models;
-using Microsoft.AspNetCore.Mvc;
-
 namespace DotnetAPI.Controllers;
 
 [ApiController]
@@ -22,7 +17,6 @@ public class UserCompleteController : ControllerBase
     }
 
     [HttpGet("GetUsers/{userId}/{isActive}")]
-    // public IEnumerable<User> GetUsers()
     public IEnumerable<UserComplete> GetUsers(int userId, bool isActive)
     {
         string sql = "EXEC TutorialAppSchema.spUsers_Get";

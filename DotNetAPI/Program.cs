@@ -1,7 +1,4 @@
 using System.Text;
-using DotNetAPI.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +28,6 @@ builder.Services.AddCors((options) =>
                     .AllowCredentials();
             });
     });
-    
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 string? tokenKeyString = builder.Configuration.GetSection("AppSettings:TokenKey").Value;
 
