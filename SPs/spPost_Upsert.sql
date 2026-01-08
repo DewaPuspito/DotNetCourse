@@ -8,7 +8,7 @@ CREATE OR ALTER PROCEDURE TutorialAppSchema.spPost_Upsert
     , @PostId INT = NULL
 AS
 BEGIN
-    IF EXISTS (SELECT * FROM TutorialAppSchema.Posts WHERE PostId = @PostId)
+    IF NOT EXISTS (SELECT * FROM TutorialAppSchema.Posts WHERE PostId = @PostId)
         BEGIN
             INSERT INTO TutorialAppSchema.Posts(
                 [UserId],

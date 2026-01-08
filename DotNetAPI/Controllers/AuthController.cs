@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Dapper;
 using DotNetAPI.Data;
 using DotNetAPI.DTOs;
 using DotNetAPI.Helpers;
@@ -39,47 +40,36 @@ namespace DotNetAPI.Controllers
                 IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists);
                 if (existingUsers.Count() == 0)
                 {
-                    byte[] passwordSalt = new byte[128 / 8];
-                    using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                    UserLoginDTO userForSetPassword = new UserLoginDTO()
                     {
-                        rng.GetNonZeroBytes(passwordSalt);
-                    }
+                        Email = userRegister.Email,
+                        Password = userRegister.Password
+                    };
 
-                    byte[] passwordHash = _authHelper.GetPasswordHash(userRegister.Password, passwordSalt);
-
-                    string sqlAddAuth = @"
-                        INSERT INTO TutorialAppSchema.Auth ([Email], 
-                        [PasswordHash], 
-                        [PasswordSalt]
-                        ) VALUES ('" + userRegister.Email + 
-                        "', @PasswordHash, @PasswordSalt)";
-
-                    List<SqlParameter> sqlParameters = new List<SqlParameter>();
-
-                    SqlParameter passwordSaltParameter = new SqlParameter("@PasswordSalt", SqlDbType.VarBinary);
-                    passwordSaltParameter.Value = passwordSalt;
-
-                    SqlParameter passwordHashParameter = new SqlParameter("@PasswordHash", SqlDbType.VarBinary);
-                    passwordHashParameter.Value = passwordHash;
-
-                    sqlParameters.Add(passwordSaltParameter);
-                    sqlParameters.Add(passwordHashParameter);
-
-                    if(_dapper.ExecuteSqlWithParameters(sqlAddAuth, sqlParameters))
+                    if(_authHelper.SetPassword(userForSetPassword))
                     {
-                        string sqlAddUser = @"
-                            INSERT INTO TutorialAppSchema.Users(
-                                [FirstName],
-                                [LastName],
-                                [Email],
-                                [Gender],
-                                [Active]
-                            ) VALUES (" +
-                                "'" + userRegister.FirstName + 
-                                "', '" + userRegister.LastName +
-                                "', '" + userRegister.Email + 
-                                "', '" + userRegister.Gender + 
-                                "', 1)";
+                        string sqlAddUser = @"EXEC TutorialAppSchema.spUser_Upsert
+                            @FirstName = '" + userRegister.FirstName + 
+                            "', @LastName = '" + userRegister.LastName +
+                            "', @Email = '" + userRegister.Email + 
+                            "', @Gender = '" + userRegister.Gender + 
+                            "', @JobTitle = '" + userRegister.JobTitle + 
+                            "', @Department = '" + userRegister.Department + 
+                            "', @Salary = '" + userRegister.Salary + 
+                            "', @Active = 1";
+                        // string sqlAddUser = @"
+                        //     INSERT INTO TutorialAppSchema.Users(
+                        //         [FirstName],
+                        //         [LastName],
+                        //         [Email],
+                        //         [Gender],
+                        //         [Active]
+                        //     ) VALUES (" +
+                        //         "'" + userRegister.FirstName + 
+                        //         "', '" + userRegister.LastName +
+                        //         "', '" + userRegister.Email + 
+                        //         "', '" + userRegister.Gender + 
+                        //         "', 1)";
                         if (_dapper.ExecuteSql(sqlAddUser))
                         {
                             return Ok();
@@ -97,14 +87,20 @@ namespace DotNetAPI.Controllers
         [HttpPost("Login")] 
         public IActionResult Login(UserLoginDTO userLogin)
         {
-            string sqlForHashAndSalt = @"SELECT
-                [PasswordHash], 
-                [PasswordSalt] 
-                FROM TutorialAppSchema.Auth WHERE Email = '" + 
-            userLogin.Email + "'";
+            string sqlForHashAndSalt = @"EXEC TutorialAppSchema.spLoginConfirmation_Get 
+                @Email = @EmailParam";
+
+            
+            DynamicParameters sqlParameters = new DynamicParameters();
+
+            // SqlParameter emailParameter = new SqlParameter("@EmailParam", SqlDbType.VarChar);
+            // emailParameter.Value = userLogin.Email;
+            // sqlParameters.Add(emailParameter);
+
+            sqlParameters.Add("@EmailParam", userLogin.Email, DbType.String);
             
             LoginConfirmationDTO loginConfirmation = _dapper
-                .LoadDataSingle<LoginConfirmationDTO>(sqlForHashAndSalt);
+                .LoadDataSingleWithParameters<LoginConfirmationDTO>(sqlForHashAndSalt, sqlParameters);
 
             byte[] passwordHash = _authHelper.GetPasswordHash(userLogin.Password, loginConfirmation.PasswordSalt);
 
@@ -145,5 +141,14 @@ namespace DotNetAPI.Controllers
             });
         }
 
+        [HttpPut("Reset Password")]
+        public IActionResult ResetPassword(UserLoginDTO userForSetPassword)
+        {
+            if(_authHelper.SetPassword(userForSetPassword))
+            {
+                return Ok();
+            }
+            throw new Exception("Failed to reset password!");
+        }
     }
 }
